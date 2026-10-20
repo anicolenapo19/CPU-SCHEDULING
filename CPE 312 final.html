@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <title>CPU Process Management - Scheduling Simulator</title>
+    <link rel="stylesheet" href="css cpe 312.css">
+</head>
+  <body>
+    <canvas id="confettiCanvas"></canvas>
+    <div id="startScreen">
+        <div class="start-content">
+            <div class="start-icon">⚙️</div>
+            <h1>CPU PROCESS MANAGEMENT</h1>
+            <p>Interactive CPU Scheduling Simulator</p>
+            <button class="main-button" id="startButton">START</button>
+            <small>Initialize CPU process management</small>
+        </div>
+    </div>
+    <div id="splashScreen">
+        <div class="splash-content">
+            <div class="process-loader">
+                <div class="cpu-box">CPU</div>
+                <div class="process-line">
+                    <div class="process-block block1">P1</div>
+                    <div class="process-block block2">P2</div>
+                    <div class="process-block block3">P3</div>
+                    <div class="process-block block4">
+                        P4
+                    </div>
+
+                </div>
+
+            </div>
+
+            <h1 class="boot-title">
+                PROCESS MANAGEMENT
+            </h1>
+
+            <p class="boot-subtitle">
+                Initializing CPU scheduling environment...
+            </p>
+
+            <p class="loading-text" id="loadingText">
+
+                Waking up the CPU...
+
+            </p>
+
+            <div class="loading-bar">
+
+                <div class="loading-progress" id="loadingProgress">
+                </div>
+
+            </div>
+
+            <p class="loading-percent" id="loadingPercent">
+
+                0%
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div id="transitionScreen">
+
+        <div class="transition-card">
+
+            <div class="transition-cpu">
+                CPU
+            </div>
+
+            <div class="transition-track">
+
+                <span class="transition-process">
+                    P1
+                </span>
+
+                <span class="transition-process">
+                    P2
+                </span>
+
+                <span class="transition-process">
+                    P3
+                </span>
+
+                <span class="transition-process">
+                    P4
+                </span>
+
+            </div>
+
+            <h2 id="transitionTitle">
+                Preparing Scheduler...
+            </h2>
+
+            <p class="loading-text" id="transitionText">
+
+                Loading process management...
+
+            </p>
+
+            <div class="mini-loader">
+
+                <div id="transitionProgress"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container hidden" id="mainContainer">
+
+        <div id="homePage">
+
+            <div class="top-title">
+
+                <h1>
+                    CPU PROCESS MANAGEMENT
+                </h1>
+
+                <p>
+                    Choose a CPU scheduling algorithm
+                </p>
+
+            </div>
+
+            <div class="menu">
+
+                <button class="menu-card" onclick="
+                    navigateTo(
+                        'fcfsPage',
+                        'FCFS Scheduler',
+                        'Preparing First Come, First Serve...'
+                    )
+                ">
+
+                    <div class="menu-icon">
+                        📥
+                    </div>
+
+                    <h3>
+                        First Come, First Serve
+                    </h3>
+
+                    <p>
+                        Processes are executed according
+                        to their arrival order.
+                    </p>
+
+                    <div class="arrow">
+                        →
+                    </div>
+
+                </button>
+
+                <button class="menu-card" onclick="
+                    navigateTo(
+                        'sjfPage',
+                        'SJF Scheduler',
+                        'Preparing Shortest Job First...'
+                    )
+                ">
+
+                    <div class="menu-icon">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        Shortest Job First
+                    </h3>
+
+                    <p>
+                        The process with the shortest
+                        burst time runs first.
+                    </p>
+
+                    <div class="arrow">
+                        →
+                    </div>
+
+                </button>
+
+                <button class="menu-card" onclick="
+                    navigateTo(
+                        'priorityPage',
+                        'Priority Scheduler',
+                        'Preparing Priority Scheduling...'
+                    )
+                ">
+
+                    <div class="menu-icon">
+                        🎯
+                    </div>
+
+                    <h3>
+                        Priority Scheduling
+                    </h3>
+
+                    <p>
+                        Processes are selected based
+                        on their priority.
+                    </p>
+
+                    <div class="arrow">
+                        →
+                    </div>
+
+                </button>
+
+                <button class="menu-card" onclick="
+                    navigateTo(
+                        'rrPage',
+                        'Round Robin Scheduler',
+                        'Preparing Round Robin...'
+                    )
+                ">
+
+                    <div class="menu-icon">
+                        🔄
+                    </div>
+
+                    <h3>
+                        Round Robin
+                    </h3>
+
+                    <p>
+                        Processes share CPU time using
+                        a fixed time quantum.
+                    </p>
+
+                    <div class="arrow">
+                        →
+                    </div>
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="fcfsPage" class="hidden">
+
+            <div class="page-header">
+
+                <h2>
+                    📥 First Come, First Serve
+                </h2>
+
+                <div class="nav-buttons">
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Returning Home',
+                            'Going back to scheduling choices...'
+                        )
+                    ">
+
+                        🏠 HOME
+
+                    </button>
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Going Back',
+                            'Returning to scheduler choices...'
+                        )
+                    ">
+
+                        ← BACK
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <h3>
+                    Process Configuration
+                </h3>
+
+                <div class="input-row">
+
+                    <div class="input-group">
+
+                        <label>
+                            Number of Processes
+                        </label>
+
+                        <input type="number" id="fcfsN" min="1" max=" " value="4" onchange="createFCFSInputs()">
+
+                    </div>
+
+                </div>
+
+                <div class="mode-container">
+
+                    <span class="mode-title">
+                        Process Value
+                    </span>
+
+                    <div class="mode-switch">
+
+                        <input type="radio" name="fcfsMode" id="modeUser" value="user" checked
+                            onchange="createFCFSInputs()">
+
+                        <label class="mode-option" for="modeUser">
+
+                            ✎ INPUT
+
+                        </label>
+
+                        <input type="radio" name="fcfsMode" id="modeRandom" value="random"
+                            onchange="createFCFSInputs()">
+
+                        <label class="mode-option" for="modeRandom">
+
+                            ✨ RANDOM
+
+                        </label>
+
+                        <span class="mode-slider"></span>
+
+                    </div>
+
+                    <p class="mode-description">
+                        Choose how the process burst times
+                        will be generated.
+                    </p>
+
+                </div>
+
+                <div id="fcfsInputs"></div>
+
+            </div>
+
+            <button class="run-button" onclick="runFCFS()">
+
+                ▶ RUN FCFS
+
+            </button>
+
+        </div>
+
+        <div id="sjfPage" class="hidden">
+
+            <div class="page-header">
+
+                <h2>
+                    ⚡ Shortest Job First
+                </h2>
+
+                <div class="nav-buttons">
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Returning Home',
+                            'Going back to scheduling choices...'
+                        )
+                    ">
+
+                        🏠 HOME
+
+                    </button>
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Going Back',
+                            'Returning to scheduler choices...'
+                        )
+                    ">
+
+                        ← BACK
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <h3>
+                    Process Configuration
+                </h3>
+
+                <div class="input-row">
+
+                    <div class="input-group">
+
+                        <label>
+                            Number of Processes
+                        </label>
+
+                        <input type="number" id="sjfN" min="1" max=" " value="4" onchange="createSJFInputs()">
+
+                    </div>
+
+                </div>
+
+                <div class="mode-container">
+
+                    <span class="mode-title">
+                        Process Value
+                    </span>
+
+                    <div class="mode-switch">
+
+                        <input type="radio" name="sjfMode" id="sjfUser" value="user" checked
+                            onchange="createSJFInputs()">
+
+                        <label class="mode-option" for="sjfUser">
+
+                            ✎ INPUT
+
+                        </label>
+
+                        <input type="radio" name="sjfMode" id="sjfRandom" value="random" onchange="createSJFInputs()">
+
+                        <label class="mode-option" for="sjfRandom">
+
+                            ✨ RANDOM
+
+                        </label>
+
+                        <span class="mode-slider"></span>
+
+                    </div>
+
+                    <p class="mode-description">
+                        Choose how the process burst times
+                        will be generated.
+                    </p>
+
+                </div>
+
+                <div id="sjfInputs"></div>
+
+            </div>
+
+            <button class="run-button" onclick="runSJF()">
+
+                ▶ RUN SJF
+
+            </button>
+
+        </div>
+
+        <div id="priorityPage" class="hidden">
+
+            <div class="page-header">
+
+                <h2>
+                    🎯 Priority Scheduling
+                </h2>
+
+                <div class="nav-buttons">
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Returning Home',
+                            'Going back to scheduling choices...'
+                        )
+                    ">
+
+                        🏠 HOME
+
+                    </button>
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Going Back',
+                            'Returning to scheduler choices...'
+                        )
+                    ">
+
+                        ← BACK
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <h3>
+                    Process Configuration
+                </h3>
+
+                <div class="input-row">
+
+                    <div class="input-group">
+
+                        <label>
+                            Number of Processes
+                        </label>
+
+                        <input type="number" id="priorityN" min="1" max=" " value="4"
+                            onchange="createPriorityInputs()">
+
+                    </div>
+
+                </div>
+
+                <div class="mode-container">
+
+                    <span class="mode-title">
+                        Process Value
+                    </span>
+
+                    <div class="mode-switch">
+
+                        <input type="radio" name="priorityMode" id="priorityUser" value="user" checked
+                            onchange="createPriorityInputs()">
+
+                        <label class="mode-option" for="priorityUser">
+
+                            ✎ INPUT
+
+                        </label>
+
+                        <input type="radio" name="priorityMode" id="priorityRandom" value="random"
+                            onchange="createPriorityInputs()">
+
+                        <label class="mode-option" for="priorityRandom">
+
+                            ✨ RANDOM
+
+                        </label>
+
+                        <span class="mode-slider"></span>
+
+                    </div>
+
+                    <p class="mode-description">
+                        Choose how burst time and priority
+                        values will be generated.
+                    </p>
+
+                </div>
+
+                <div id="priorityInputs"></div>
+
+            </div>
+
+            <button class="run-button" onclick="runPriority()">
+
+                ▶ RUN PRIORITY
+
+            </button>
+
+        </div>
+
+        <div id="rrPage" class="hidden">
+
+            <div class="page-header">
+
+                <h2>
+                    🔄 Round Robin
+                </h2>
+
+                <div class="nav-buttons">
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Returning Home',
+                            'Going back to scheduling choices...'
+                        )
+                    ">
+
+                        🏠 HOME
+
+                    </button>
+
+                    <button class="nav-btn" onclick="
+                        navigateTo(
+                            'homePage',
+                            'Going Back',
+                            'Returning to scheduler choices...'
+                        )
+                    ">
+
+                        ← BACK
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <h3>
+                    Process Configuration
+                </h3>
+
+                <div class="input-row">
+
+                    <div class="input-group">
+
+                        <label>
+                            Number of Processes
+                        </label>
+
+                        <input type="number" id="rrN" min="1" max=" " value="4" onchange="createRRInputs()">
+
+                    </div>
+
+                    <div class="input-group">
+
+                        <label>
+                            Time Quantum
+                        </label>
+
+                        <input type="number" id="rrQuantum" min="1" value="2">
+
+                    </div>
+
+                </div>
+
+                <div class="mode-container">
+
+                    <span class="mode-title">
+                        Process Value
+                    </span>
+
+                    <div class="mode-switch">
+
+                        <input type="radio" name="rrMode" id="rrUser" value="user" checked onchange="createRRInputs()">
+
+                        <label class="mode-option" for="rrUser">
+
+                            ✎ INPUT
+
+                        </label>
+
+                        <input type="radio" name="rrMode" id="rrRandom" value="random" onchange="createRRInputs()">
+
+                        <label class="mode-option" for="rrRandom">
+
+                            ✨ RANDOM
+
+                        </label>
+
+                        <span class="mode-slider"></span>
+
+                    </div>
+
+                    <p class="mode-description">
+                        Choose how the process burst times
+                        will be generated.
+                    </p>
+
+                </div>
+
+                <div id="rrInputs"></div>
+
+            </div>
+
+            <button class="run-button" onclick="runRR()">
+
+                ▶ RUN ROUND ROBIN
+
+            </button>
+
+        </div>
+
+        <div id="resultsPage" class="hidden">
+
+            <div class="result-title">
+
+                <h2 id="resultsTitle">
+                    Scheduling Results
+                </h2>
+
+                <span class="algorithm-badge" id="resultsBadge">
+
+                    CPU Scheduling
+
+                </span>
+
+            </div>
+
+            <div class="execution-box">
+
+                <div class="execution-label">
+                    CPU PROCESS EXECUTION
+                </div>
+
+                <div class="execution-system">
+
+                    <div class="queue-area">
+
+                        <div class="queue-title">
+                            PROCESS QUEUE
+                        </div>
+
+                        <div class="process-queue" id="executionQueue">
+                        </div>
+
+                    </div>
+
+                    <div class="cpu-animation" id="cpuAnimation">
+
+                        CPU
+
+                    </div>
+
+                </div>
+
+                <div class="execution-status" id="executionStatus">
+
+                    Waiting for process execution...
+
+                </div>
+
+                <div class="execution-clock" id="executionClock">
+
+                    CPU Time: 0
+
+                </div>
+
+            </div>
+
+            <div class="section hidden" id="resultsGanttSection">
+
+                <h3>
+                    📊 Gantt Chart
+                </h3>
+
+                <div class="gantt-container">
+
+                    <div class="gantt" id="resultsGantt">
+                    </div>
+
+                    <div class="gantt-time" id="resultsGanttTime">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="section hidden" id="resultsTableSection">
+
+                <h3>
+                    📋 Scheduling Results
+                </h3>
+
+                <div class="table-wrapper" id="resultsTable">
+                </div>
+
+            </div>
+
+            <div class="result-explanation hidden" id="resultExplanation">
+
+                <h3>
+                    📘 How This Scheduling Worked
+                </h3>
+
+                <div id="explanationContent"></div>
+
+            </div>
+
+            <div class="result-actions hidden" id="resultActions">
+
+                <button class="edit-button" onclick="editCurrentValues()">
+
+                    ← BACK / EDIT VALUES
+
+                </button>
+
+                <button class="nav-btn" onclick="
+                    navigateTo(
+                        'homePage',
+                        'Returning Home',
+                        'Preparing scheduler choices...'
+                    )
+                ">
+
+                    🏠 HOME
+
+                </button>
+
+                <button class="main-button" onclick="showThankYou()">
+
+                    FINISH ✓
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="thankYouPage" class="hidden">
+
+            <div class="thank-card">
+
+                <div class="thank-icon">
+                    ✓
+                </div>
+
+                <h1>
+                    THANK YOU!
+                </h1>
+
+                <p>
+
+                    Thank you for using the
+                    <strong>
+                        CPU Process Management Simulator.
+                    </strong>
+
+                </p>
+
+                <p>
+
+                    You have successfully explored CPU
+                    scheduling, process execution,
+                    and scheduling results.
+
+                </p>
+
+                <p class="quote">
+
+                    "Efficient processes create
+                    an efficient system. 🚀"
+
+                </p>
+
+                <button class="main-button" onclick="restartSimulator()">
+
+                    ↻ RUN AGAIN
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let currentPage = "homePage";
+
+        let currentResult = null;
+
+        let lastAlgorithmPage = "homePage";
+
+        function randomNumber(min, max) {
+
+            return Math.floor(
+                Math.random() * (max - min + 1)
+            ) + min;
+
+        }
+
+        function getMode(name) {
+
+            const selected =
+                document.querySelector(
+                    `input[name="${name}"]:checked`
+                );
+
+            return selected
+                ? selected.value
+                : "user";
+
+        }
+
+        const pages = [
+
+            "homePage",
+            "fcfsPage",
+            "sjfPage",
+            "priorityPage",
+            "rrPage",
+            "resultsPage",
+            "thankYouPage"
+
+        ];
+
+        function showPageInstant(pageId) {
+
+            pages.forEach(id => {
+
+                const page =
+                    document.getElementById(id);
+
+                if (page) {
+
+                    page.classList.add("hidden");
+
+                }
+
+            });
+
+            const target =
+                document.getElementById(pageId);
+
+            if (!target) return;
+
+            target.classList.remove("hidden");
+
+            target.classList.remove("fade-in");
+
+            void target.offsetWidth;
+
+            target.classList.add("fade-in");
+
+            currentPage = pageId;
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+        function navigateTo(
+            pageId,
+            title = "Preparing...",
+            text = "Loading process management..."
+        ) {
+
+            if (pageId === currentPage) return;
+
+            if (
+
+                pageId === "fcfsPage" ||
+                pageId === "sjfPage" ||
+                pageId === "priorityPage" ||
+                pageId === "rrPage"
+
+            ) {
+
+                lastAlgorithmPage = pageId;
+
+            }
+
+            const screen =
+                document.getElementById(
+                    "transitionScreen"
+                );
+
+            const titleElement =
+                document.getElementById(
+                    "transitionTitle"
+                );
+
+            const textElement =
+                document.getElementById(
+                    "transitionText"
+                );
+
+            const progress =
+                document.getElementById(
+                    "transitionProgress"
+                );
+
+            titleElement.textContent = title;
+
+            textElement.textContent = text;
+
+            progress.style.width = "0%";
+
+            screen.classList.remove("hide");
+
+            screen.classList.add("show");
+
+            let value = 0;
+
+            const messages = [
+
+                "Loading process...",
+                "Preparing CPU...",
+                "Organizing process queue...",
+                "Initializing scheduler...",
+                "Almost ready..."
+
+            ];
+
+            const interval = setInterval(() => {
+
+                value += 10;
+
+                progress.style.width =
+                    value + "%";
+
+                if (value % 20 === 0) {
+
+                    textElement.textContent =
+                        messages[
+                        Math.min(
+                            Math.floor(value / 20),
+                            messages.length - 1
+                        )
+                        ];
+
+                }
+
+                if (value >= 100) {
+
+                    clearInterval(interval);
+
+                    setTimeout(() => {
+
+                        showPageInstant(pageId);
+
+                        screen.classList.remove("show");
+
+                        screen.classList.add("hide");
+
+                        setTimeout(() => {
+
+                            screen.classList.remove("hide");
+
+                        }, 450);
+
+                    }, 180);
+
+                }
+
+            }, 35);
+
+        }
+
+        function createFCFSInputs() {
+
+            const n = Math.max(
+
+                1,
+
+                parseInt(
+                    document.getElementById(
+                        "fcfsN"
+                    ).value
+                ) || 1
+
+            );
+
+            const mode =
+                getMode("fcfsMode");
+
+            const container =
+                document.getElementById(
+                    "fcfsInputs"
+                );
+
+            let html =
+                `<div class="input-row">`;
+
+            for (let i = 1; i <= n; i++) {
+
+                html += `
+
+            <div class="input-group">
+
+                <label>
+                    P${i} Burst Time
+                </label>
+
+                <input
+                    type="number"
+                    id="fcfsBurst${i}"
+                    min="1"
+                    value="${randomNumber(1, 10)}"
+                    ${mode === "random"
+                        ? "disabled"
+                        : ""}>
+
+            </div>
+
+        `;
+
+            }
+
+            html +=
+                `</div>`;
+
+            container.innerHTML = html;
+
+        }
+
+        function createSJFInputs() {
+
+            const n = Math.max(
+
+                1,
+
+                parseInt(
+                    document.getElementById(
+                        "sjfN"
+                    ).value
+                ) || 1
+
+            );
+
+            const mode =
+                getMode("sjfMode");
+
+            const container =
+                document.getElementById(
+                    "sjfInputs"
+                );
+
+            let html =
+                `<div class="input-row">`;
+
+            for (let i = 1; i <= n; i++) {
+
+                html += `
+
+            <div class="input-group">
+
+                <label>
+                    P${i} Burst Time
+                </label>
+
+                <input
+                    type="number"
+                    id="sjfBurst${i}"
+                    min="1"
+                    value="${randomNumber(1, 10)}"
+                    ${mode === "random"
+                        ? "disabled"
+                        : ""}>
+
+            </div>
+
+        `;
+
+            }
+
+            html +=
+                `</div>`;
+
+            container.innerHTML = html;
+
+        }
+
+        function createPriorityInputs() {
+
+            const n = Math.max(
+
+                1,
+
+                parseInt(
+                    document.getElementById(
+                        "priorityN"
+                    ).value
+                ) || 1
+
+            );
+
+            const mode =
+                getMode("priorityMode");
+
+            const container =
+                document.getElementById(
+                    "priorityInputs"
+                );
+
+            let html =
+                `<div class="input-row">`;
+
+            for (let i = 1; i <= n; i++) {
+
+                html += `
+
+            <div class="input-group">
+
+                <label>
+                    P${i} Burst Time
+                </label>
+
+                <input
+                    type="number"
+                    id="priorityBurst${i}"
+                    min="1"
+                    value="${randomNumber(1, 10)}"
+                    ${mode === "random"
+                        ? "disabled"
+                        : ""}>
+
+            </div>
+
+            <div class="input-group">
+
+                <label>
+                    P${i} Priority
+                </label>
+
+                <input
+                    type="number"
+                    id="priorityValue${i}"
+                    min="1"
+                    value="${i}"
+                    ${mode === "random"
+                        ? "disabled"
+                        : ""}>
+
+            </div>
+
+        `;
+
+            }
+
+            html +=
+                `</div>`;
+
+            container.innerHTML = html;
+
+        }
+
+        function createRRInputs() {
+
+            const n = Math.max(
+
+                1,
+
+                parseInt(
+                    document.getElementById(
+                        "rrN"
+                    ).value
+                ) || 1
+
+            );
+
+            const mode =
+                getMode("rrMode");
+
+            const container =
+                document.getElementById(
+                    "rrInputs"
+                );
+
+            let html =
+                `<div class="input-row">`;
+
+            for (let i = 1; i <= n; i++) {
+
+                html += `
+
+            <div class="input-group">
+
+                <label>
+                    P${i} Burst Time
+                </label>
+
+                <input
+                    type="number"
+                    id="rrBurst${i}"
+                    min="1"
+                    value="${randomNumber(1, 10)}"
+                    ${mode === "random"
+                        ? "disabled"
+                        : ""}>
+
+            </div>
+
+        `;
+
+            }
+
+            html +=
+                `</div>`;
+
+            container.innerHTML = html;
+
+        }
+
+        function validNumber(value) {
+
+            return Number.isFinite(value)
+                && value > 0;
+
+        }
+
+        function runFCFS() {
+
+            const n =
+                parseInt(
+                    document.getElementById(
+                        "fcfsN"
+                    ).value
+                );
+
+            const mode =
+                getMode("fcfsMode");
+
+            if (!n || n < 1) {
+
+                alert(
+                    "Please enter a valid number of processes."
+                );
+
+                return;
+
+            }
+
+            let burst = [];
+
+            for (let i = 1; i <= n; i++) {
+
+                let value;
+
+                if (mode === "random") {
+
+                    value =
+                        randomNumber(1, 10);
+
+                }
+
+                else {
+
+                    value =
+                        parseInt(
+                            document.getElementById(
+                                `fcfsBurst${i}`
+                            ).value
+                        );
+
+                }
+
+                if (!validNumber(value)) {
+
+                    alert(
+                        `Invalid burst time for P${i}.`
+                    );
+
+                    return;
+
+                }
+
+                burst.push(value);
+
+            }
+
+            let processes = [];
+
+            let starts = [];
+
+            let ends = [];
+
+            let rows = [];
+
+            let time = 0;
+
+            for (let i = 0; i < n; i++) {
+
+                const process =
+                    `P${i + 1}`;
+
+                const start =
+                    time;
+
+                const end =
+                    time + burst[i];
+
+                const completion =
+                    end;
+
+                const turnaround =
+                    completion;
+
+                const waiting =
+                    turnaround - burst[i];
+
+                processes.push(process);
+
+                starts.push(start);
+
+                ends.push(end);
+
+                rows.push({
+
+                    process,
+
+                    burst: burst[i],
+
+                    completion,
+
+                    turnaround,
+
+                    waiting
+
+                });
+
+                time = end;
+
+            }
+
+            showSchedulingResults({
+
+                title:
+                    "FCFS Scheduling Results",
+
+                badge:
+                    "First Come, First Serve",
+
+                algorithm:
+                    "FCFS",
+
+                processes,
+
+                starts,
+
+                ends,
+
+                rows
+
+            });
+
+        }
+
+        function runSJF() {
+
+            const n =
+                parseInt(
+                    document.getElementById(
+                        "sjfN"
+                    ).value
+                );
+
+            const mode =
+                getMode("sjfMode");
+
+            if (!n || n < 1) {
+
+                alert(
+                    "Please enter a valid number of processes."
+                );
+
+                return;
+
+            }
+
+            let data = [];
+
+            for (let i = 1; i <= n; i++) {
+
+                let burst;
+
+                if (mode === "random") {
+
+                    burst =
+                        randomNumber(1, 10);
+
+                }
+
+                else {
+
+                    burst =
+                        parseInt(
+                            document.getElementById(
+                                `sjfBurst${i}`
+                            ).value
+                        );
+
+                }
+
+                if (!validNumber(burst)) {
+
+                    alert(
+                        `Invalid burst time for P${i}.`
+                    );
+
+                    return;
+
+                }
+
+                data.push({
+
+                    id: i,
+
+                    burst
+
+                });
+
+            }
+
+            data.sort(
+
+                (a, b) =>
+                    a.burst - b.burst ||
+                    a.id - b.id
+
+            );
+
+            let time = 0;
+
+            let processes = [];
+
+            let starts = [];
+
+            let ends = [];
+
+            let rows = [];
+
+            data.forEach(item => {
+
+                const start =
+                    time;
+
+                const end =
+                    time + item.burst;
+
+                const completion =
+                    end;
+
+                const turnaround =
+                    completion;
+
+                const waiting =
+                    turnaround - item.burst;
+
+                processes.push(
+                    `P${item.id}`
+                );
+
+                starts.push(start);
+
+                ends.push(end);
+
+                rows.push({
+
+                    process:
+                        `P${item.id}`,
+
+                    burst:
+                        item.burst,
+
+                    completion,
+
+                    turnaround,
+
+                    waiting
+
+                });
+
+                time = end;
+
+            });
+
+            showSchedulingResults({
+
+                title:
+                    "SJF Scheduling Results",
+
+                badge:
+                    "Shortest Job First",
+
+                algorithm:
+                    "SJF",
+
+                processes,
+
+                starts,
+
+                ends,
+
+                rows
+
+            });
+
+        }
+
+        function runPriority() {
+
+            const n =
+                parseInt(
+                    document.getElementById(
+                        "priorityN"
+                    ).value
+                );
+
+            const mode =
+                getMode("priorityMode");
+
+            if (!n || n < 1) {
+
+                alert(
+                    "Please enter a valid number of processes."
+                );
+
+                return;
+
+            }
+
+            let data = [];
+
+            for (let i = 1; i <= n; i++) {
+
+                let burst;
+
+                let priority;
+
+                if (mode === "random") {
+
+                    burst =
+                        randomNumber(1, 10);
+
+                    priority =
+                        randomNumber(1, 5);
+
+                }
+
+                else {
+
+                    burst =
+                        parseInt(
+                            document.getElementById(
+                                `priorityBurst${i}`
+                            ).value
+                        );
+
+                    priority =
+                        parseInt(
+                            document.getElementById(
+                                `priorityValue${i}`
+                            ).value
+                        );
+
+                }
+
+                if (
+                    !validNumber(burst) ||
+                    !validNumber(priority)
+                ) {
+
+                    alert(
+                        `Invalid values for P${i}.`
+                    );
+
+                    return;
+
+                }
+
+                data.push({
+
+                    id: i,
+
+                    burst,
+
+                    priority
+
+                });
+
+            }
+
+            data.sort(
+
+                (a, b) =>
+                    a.priority - b.priority ||
+                    a.id - b.id
+
+            );
+
+            let time = 0;
+
+            let processes = [];
+
+            let starts = [];
+
+            let ends = [];
+
+            let rows = [];
+
+            data.forEach(item => {
+
+                const start =
+                    time;
+
+                const end =
+                    time + item.burst;
+
+                const completion =
+                    end;
+
+                const turnaround =
+                    completion;
+
+                const waiting =
+                    turnaround - item.burst;
+
+                processes.push(
+                    `P${item.id}`
+                );
+
+                starts.push(start);
+
+                ends.push(end);
+
+                rows.push({
+
+                    process:
+                        `P${item.id}`,
+
+                    burst:
+                        item.burst,
+
+                    priority:
+                        item.priority,
+
+                    completion,
+
+                    turnaround,
+
+                    waiting
+
+                });
+
+                time = end;
+
+            });
+
+            showSchedulingResults({
+
+                title:
+                    "Priority Scheduling Results",
+
+                badge:
+                    "Non-Preemptive Priority",
+
+                algorithm:
+                    "Priority",
+
+                processes,
+
+                starts,
+
+                ends,
+
+                rows,
+
+                includePriority: true
+
+            });
+
+        }
+
+        function runRR() {
+
+            const n =
+                parseInt(
+                    document.getElementById(
+                        "rrN"
+                    ).value
+                );
+
+            const quantum =
+                parseInt(
+                    document.getElementById(
+                        "rrQuantum"
+                    ).value
+                );
+
+            const mode =
+                getMode("rrMode");
+
+            if (!n || n < 1) {
+
+                alert(
+                    "Please enter a valid number of processes."
+                );
+
+                return;
+
+            }
+
+            if (!quantum || quantum < 1) {
+
+                alert(
+                    "Please enter a valid time quantum."
+                );
+
+                return;
+
+            }
+
+            let burst = [];
+
+            for (let i = 1; i <= n; i++) {
+
+                let value;
+
+                if (mode === "random") {
+
+                    value =
+                        randomNumber(1, 10);
+
+                }
+
+                else {
+
+                    value =
+                        parseInt(
+                            document.getElementById(
+                                `rrBurst${i}`
+                            ).value
+                        );
+
+                }
+
+                if (!validNumber(value)) {
+
+                    alert(
+                        `Invalid burst time for P${i}.`
+                    );
+
+                    return;
+
+                }
+
+                burst.push(value);
+
+            }
+
+            let remaining =
+                [...burst];
+
+            let completion =
+                Array(n).fill(0);
+
+            let time = 0;
+
+            let queue =
+                Array.from(
+                    { length: n },
+                    (_, i) => i
+                );
+
+            let processes = [];
+
+            let starts = [];
+
+            let ends = [];
+
+            while (queue.length > 0) {
+
+                const index =
+                    queue.shift();
+
+                if (
+                    remaining[index] <= 0
+                ) {
+
+                    continue;
+
+                }
+
+                const start =
+                    time;
+
+                const execution =
+                    Math.min(
+                        quantum,
+                        remaining[index]
+                    );
+
+                const end =
+                    time + execution;
+
+                processes.push(
+                    `P${index + 1}`
+                );
+
+                starts.push(start);
+
+                ends.push(end);
+
+                time = end;
+
+                remaining[index] -=
+                    execution;
+
+                if (
+                    remaining[index] > 0
+                ) {
+
+                    queue.push(index);
+
+                }
+
+                else {
+
+                    completion[index] = time;
+
+                }
+
+            }
+
+            let rows = [];
+
+            for (let i = 0; i < n; i++) {
+
+                const turnaround =
+                    completion[i];
+
+                const waiting =
+                    turnaround - burst[i];
+
+                rows.push({
+
+                    process:
+                        `P${i + 1}`,
+
+                    burst:
+                        burst[i],
+
+                    completion:
+                        completion[i],
+
+                    turnaround,
+
+                    waiting
+
+                });
+
+            }
+
+            showSchedulingResults({
+
+                title:
+                    "Round Robin Results",
+
+                badge:
+                    `Round Robin • Quantum ${quantum}`,
+
+                algorithm:
+                    "Round Robin",
+
+                quantum,
+
+                processes,
+
+                starts,
+
+                ends,
+
+                rows
+
+            });
+
+        }
+
+        function showSchedulingResults(result) {
+
+            currentResult =
+                result;
+
+            showPageInstant(
+                "resultsPage"
+            );
+
+            document.getElementById(
+                "resultsTitle"
+            ).textContent =
+                result.title;
+
+            document.getElementById(
+                "resultsBadge"
+            ).textContent =
+                result.badge;
+
+            document.getElementById(
+                "resultsGanttSection"
+            ).classList.add(
+                "hidden"
+            );
+
+            document.getElementById(
+                "resultsTableSection"
+            ).classList.add(
+                "hidden"
+            );
+
+            document.getElementById(
+                "resultExplanation"
+            ).classList.add(
+                "hidden"
+            );
+
+            document.getElementById(
+                "resultActions"
+            ).classList.add(
+                "hidden"
+            );
+
+            document.getElementById(
+                "resultsGantt"
+            ).innerHTML = "";
+
+            document.getElementById(
+                "resultsGanttTime"
+            ).innerHTML = "";
+
+            document.getElementById(
+                "resultsTable"
+            ).innerHTML = "";
+
+            document.getElementById(
+                "explanationContent"
+            ).innerHTML = "";
+
+            createExecutionQueue(
+                result.processes
+            );
+
+            playProcessAnimation(
+
+                result,
+
+                () => {
+
+                    displayResultGantt(
+                        result
+                    );
+
+                    displayResultTable(
+                        result
+                    );
+
+                    displayResultExplanation(
+                        result
+                    );
+
+                    setTimeout(() => {
+
+                        document.getElementById(
+                            "resultActions"
+                        ).classList.remove(
+                            "hidden"
+                        );
+
+                    }, 500);
+
+                }
+
+            );
+
+        }
+
+        function displayResultExplanation(
+            result
+        ) {
+
+            const section =
+                document.getElementById(
+                    "resultExplanation"
+                );
+
+            const content =
+                document.getElementById(
+                    "explanationContent"
+                );
+
+            let html = "";
+
+            if (result.algorithm === "FCFS") {
+
+                html = `
+
+            <p>
+
+                <strong>
+                    First Come, First Serve (FCFS)
+                </strong>
+
+                executes the processes in the same
+                order that they are placed in the
+                process queue.
+
+            </p>
+
+            <div class="explanation-points">
+
+                <div class="explanation-point">
+
+                    <strong>
+                        📥 Execution Order
+                    </strong>
+
+                    The processes are handled one
+                    after another, starting with P1,
+                    then P2, P3, and so on.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        ⏱️ Waiting Time
+                    </strong>
+
+                    A process waits until all processes
+                    before it have finished execution.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        📊 Gantt Chart
+                    </strong>
+
+                    The chart shows the continuous
+                    order in which each process uses
+                    the CPU.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        💡 Key Idea
+                    </strong>
+
+                    FCFS is simple and fair according
+                    to arrival order, but a long process
+                    can make shorter processes wait.
+
+                </div>
+
+            </div>
+
+        `;
+
+            }
+
+            else if (result.algorithm === "SJF") {
+
+                html = `
+
+            <p>
+
+                <strong>
+                    Shortest Job First (SJF)
+                </strong>
+
+                arranges the processes according
+                to their burst time. The process
+                requiring the least CPU time is
+                executed first.
+
+            </p>
+
+            <div class="explanation-points">
+
+                <div class="explanation-point">
+
+                    <strong>
+                        ⚡ Execution Order
+                    </strong>
+
+                    Processes are sorted from the
+                    shortest burst time to the
+                    longest burst time.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        ⏱️ Waiting Time
+                    </strong>
+
+                    Shorter processes are prioritized,
+                    which can reduce the average
+                    waiting time.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        📊 Gantt Chart
+                    </strong>
+
+                    The chart displays the shortest
+                    available process first.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        💡 Key Idea
+                    </strong>
+
+                    SJF can provide efficient waiting
+                    times, but longer processes may
+                    have to wait longer.
+
+                </div>
+
+            </div>
+
+        `;
+
+            }
+
+            else if (result.algorithm === "Priority") {
+
+                html = `
+
+            <p>
+
+                <strong>
+                    Priority Scheduling
+                </strong>
+
+                selects processes according to
+                their assigned priority. In this
+                simulator, a smaller priority number
+                represents a higher priority.
+
+            </p>
+
+            <div class="explanation-points">
+
+                <div class="explanation-point">
+
+                    <strong>
+                        🎯 Execution Order
+                    </strong>
+
+                    The process with the highest
+                    priority is executed first.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        🔢 Priority Number
+                    </strong>
+
+                    Priority 1 is considered higher
+                    than Priority 2, Priority 3, and
+                    so on.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        📊 Gantt Chart
+                    </strong>
+
+                    The chart shows the processes
+                    arranged according to priority.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        💡 Key Idea
+                    </strong>
+
+                    Important processes can be
+                    executed earlier, but low-priority
+                    processes may experience longer
+                    waiting times.
+
+                </div>
+
+            </div>
+
+        `;
+
+            }
+
+            else if (result.algorithm === "Round Robin") {
+
+                html = `
+
+            <p>
+
+                <strong>
+                    Round Robin
+                </strong>
+
+                gives each process a fixed amount
+                of CPU time called a
+                <strong>
+                    time quantum
+                </strong>.
+
+                When a process does not finish
+                within its quantum, it goes back
+                to the queue.
+
+            </p>
+
+            <div class="explanation-points">
+
+                <div class="explanation-point">
+
+                    <strong>
+                        🔄 Execution Order
+                    </strong>
+
+                    Processes take turns using the
+                    CPU in a circular queue.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        ⏱️ Time Quantum
+                    </strong>
+
+                    Each process receives up to
+                    ${result.quantum} CPU time units
+                    before the next process gets a turn.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        📊 Gantt Chart
+                    </strong>
+
+                    A process may appear several times
+                    because it can return to the queue
+                    when it has remaining burst time.
+
+                </div>
+
+                <div class="explanation-point">
+
+                    <strong>
+                        💡 Key Idea
+                    </strong>
+
+                    Round Robin provides fair CPU
+                    sharing and is commonly associated
+                    with time-sharing systems.
+
+                </div>
+
+            </div>
+
+        `;
+
+            }
+
+            content.innerHTML =
+                html;
+
+            section.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        function createExecutionQueue(
+            processes
+        ) {
+
+            const queue =
+                document.getElementById(
+                    "executionQueue"
+                );
+
+            queue.innerHTML = "";
+
+            const unique =
+                [...new Set(processes)];
+
+            unique.forEach(process => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+                item.className =
+                    "queue-item waiting";
+
+                item.id =
+                    `queue-${process}`;
+
+                item.textContent =
+                    process;
+
+                queue.appendChild(
+                    item
+                );
+
+            });
+
+        }
+
+        function playProcessAnimation(
+            result,
+            callback
+        ) {
+
+            const cpu =
+                document.getElementById(
+                    "cpuAnimation"
+                );
+
+            const status =
+                document.getElementById(
+                    "executionStatus"
+                );
+
+            const clock =
+                document.getElementById(
+                    "executionClock"
+                );
+
+            cpu.classList.add(
+                "active"
+            );
+
+            let index = 0;
+
+            function executeNext() {
+
+                if (
+                    index >=
+                    result.processes.length
+                ) {
+
+                    cpu.classList.remove(
+                        "active"
+                    );
+
+                    status.textContent =
+                        "✓ All processes completed!";
+
+                    clock.textContent =
+                        `CPU Time: ${result.ends[
+                        result.ends.length - 1
+                        ]
+                        }`;
+
+                    callback();
+
+                    return;
+
+                }
+
+                const process =
+                    result.processes[index];
+
+                const start =
+                    result.starts[index];
+
+                const end =
+                    result.ends[index];
+
+                document
+                    .querySelectorAll(
+                        ".queue-item"
+                    )
+                    .forEach(item => {
+
+                        item.classList.remove(
+                            "running"
+                        );
+
+                    });
+
+                const current =
+                    document.getElementById(
+                        `queue-${process}`
+                    );
+
+                if (current) {
+
+                    current.classList.remove(
+                        "waiting"
+                    );
+
+                    current.classList.add(
+                        "running"
+                    );
+
+                }
+
+                status.textContent =
+                    `⚙️ Executing ${process}...`;
+
+                clock.textContent =
+                    `CPU Time: ${start} → ${end}`;
+
+                const duration =
+                    Math.max(
+
+                        450,
+
+                        Math.min(
+
+                            900,
+
+                            (end - start) * 180
+
+                        )
+
+                    );
+
+                setTimeout(() => {
+
+                    if (current) {
+
+                        current.classList.remove(
+                            "running"
+                        );
+
+                        current.classList.add(
+                            "done"
+                        );
+
+                    }
+
+                    index++;
+
+                    executeNext();
+
+                }, duration);
+
+            }
+
+            executeNext();
+
+        }
+
+        function displayResultGantt(
+            result
+        ) {
+
+            const section =
+                document.getElementById(
+                    "resultsGanttSection"
+                );
+
+            const gantt =
+                document.getElementById(
+                    "resultsGantt"
+                );
+
+            const timeRow =
+                document.getElementById(
+                    "resultsGanttTime"
+                );
+
+            gantt.innerHTML = "";
+
+            timeRow.innerHTML = "";
+
+            result.processes.forEach(
+                (process, index) => {
+
+                    const block =
+                        document.createElement(
+                            "div"
+                        );
+
+                    block.className =
+                        "gantt-block";
+
+                    block.textContent =
+                        process;
+
+                    const width =
+                        Math.max(
+
+                            70,
+
+                            (
+                                result.ends[index] -
+                                result.starts[index]
+                            ) * 30
+
+                        );
+
+                    block.style.minWidth =
+                        `${width}px`;
+
+                    block.style.animationDelay =
+                        `${index * .08}s`;
+
+                    gantt.appendChild(
+                        block
+                    );
+
+                }
+            );
+
+            result.starts.forEach(
+                (time, index) => {
+
+                    const span =
+                        document.createElement(
+                            "span"
+                        );
+
+                    const width =
+                        Math.max(
+
+                            70,
+
+                            (
+                                result.ends[index] -
+                                result.starts[index]
+                            ) * 30
+
+                        );
+
+                    span.style.minWidth =
+                        `${width}px`;
+
+                    span.textContent =
+                        time;
+
+                    timeRow.appendChild(
+                        span
+                    );
+
+                }
+            );
+
+            const last =
+                document.createElement(
+                    "span"
+                );
+
+            last.textContent =
+                result.ends[
+                result.ends.length - 1
+                ];
+
+            timeRow.appendChild(
+                last
+            );
+
+            section.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        function displayResultTable(
+            result
+        ) {
+
+            const section =
+                document.getElementById(
+                    "resultsTableSection"
+                );
+
+            const container =
+                document.getElementById(
+                    "resultsTable"
+                );
+
+            let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Process
+                    </th>
+
+                    <th>
+                        Burst Time
+                    </th>
+
+                    ${result.includePriority
+                    ? `
+                            <th>
+                                Priority
+                            </th>
+                        `
+                    : ""
+                }
+
+                    <th>
+                        Completion Time
+                    </th>
+
+                    <th>
+                        Turnaround Time
+                    </th>
+
+                    <th>
+                        Waiting Time
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+            result.rows.forEach(
+                (row, index) => {
+
+                    html += `
+
+                <tr
+                    style="
+                        animation-delay:
+                        ${index * .08}s
+                    "
+                >
+
+                    <td>
+                        ${row.process}
+                    </td>
+
+                    <td>
+                        ${row.burst}
+                    </td>
+
+                    ${result.includePriority
+                            ? `
+                            <td>
+                                ${row.priority}
+                            </td>
+                        `
+                            : ""
+                        }
+
+                    <td>
+                        ${row.completion}
+                    </td>
+
+                    <td>
+                        ${row.turnaround}
+                    </td>
+
+                    <td>
+                        ${row.waiting}
+                    </td>
+
+                </tr>
+
+            `;
+
+                }
+            );
+
+            html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+            container.innerHTML =
+                html;
+
+            section.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        function editCurrentValues() {
+
+            let target =
+                lastAlgorithmPage;
+
+            if (
+
+                !target ||
+                target === "resultsPage" ||
+                target === "thankYouPage"
+
+            ) {
+
+                target =
+                    "homePage";
+
+            }
+
+            let title =
+                "Editing Process Values";
+
+            let text =
+                "Returning to the process configuration...";
+
+            if (
+                target === "fcfsPage"
+            ) {
+
+                title =
+                    "Edit FCFS Values";
+
+                text =
+                    "Returning to FCFS configuration...";
+
+            }
+
+            else if (
+                target === "sjfPage"
+            ) {
+
+                title =
+                    "Edit SJF Values";
+
+                text =
+                    "Returning to SJF configuration...";
+
+            }
+
+            else if (
+                target === "priorityPage"
+            ) {
+
+                title =
+                    "Edit Priority Values";
+
+                text =
+                    "Returning to Priority configuration...";
+
+            }
+
+            else if (
+                target === "rrPage"
+            ) {
+
+                title =
+                    "Edit Round Robin Values";
+
+                text =
+                    "Returning to Round Robin configuration...";
+
+            }
+
+            navigateTo(
+                target,
+                title,
+                text
+            );
+
+        }
+
+        function showThankYou() {
+
+            navigateTo(
+
+                "thankYouPage",
+
+                "Completing Session...",
+
+                "Preparing your CPU scheduling summary..."
+
+            );
+
+            setTimeout(() => {
+
+                startConfetti();
+
+            }, 900);
+
+        }
+
+        let confettiAnimation = null;
+
+        let confettiParticles = [];
+
+        let confettiRunning = false;
+
+        function startConfetti() {
+
+            const canvas =
+                document.getElementById(
+                    "confettiCanvas"
+                );
+
+            const ctx =
+                canvas.getContext(
+                    "2d"
+                );
+
+            canvas.style.display =
+                "block";
+
+            const dpr =
+                Math.min(
+                    window.devicePixelRatio || 1,
+                    2
+                );
+
+            canvas.width =
+                window.innerWidth * dpr;
+
+            canvas.height =
+                window.innerHeight * dpr;
+
+            canvas.style.width =
+                window.innerWidth + "px";
+
+            canvas.style.height =
+                window.innerHeight + "px";
+
+            ctx.setTransform(
+                dpr,
+                0,
+                0,
+                dpr,
+                0,
+                0
+            );
+
+            confettiParticles = [];
+
+            const particleCount =
+                window.innerWidth < 600
+                    ? 110
+                    : 180;
+
+            const colors = [
+
+                "#318ac0",
+                "#5fb7e7",
+                "#7cccf2",
+                "#9edcff",
+                "#ffffff",
+                "#4da9d9",
+                "#b9e8ff"
+
+            ];
+
+            for (
+                let i = 0;
+                i < particleCount;
+                i++
+            ) {
+
+                confettiParticles.push({
+
+                    x:
+                        Math.random() *
+                        window.innerWidth,
+
+                    y:
+                        -20 -
+                        Math.random() *
+                        window.innerHeight * .4,
+
+                    size:
+                        Math.random() * 7 + 4,
+
+                    speed:
+                        Math.random() * 1.8 + .8,
+
+                    wind:
+                        (Math.random() - .5) * .6,
+
+                    rotation:
+                        Math.random() * Math.PI * 2,
+
+                    rotationSpeed:
+                        (Math.random() - .5) * .12,
+
+                    wobble:
+                        Math.random() * Math.PI * 2,
+
+                    wobbleSpeed:
+                        Math.random() * .05 + .02,
+
+                    color:
+                        colors[
+                        Math.floor(
+                            Math.random() *
+                            colors.length
+                        )
+                        ],
+
+                    shape:
+                        Math.random() > .5
+                            ? "rect"
+                            : "circle",
+
+                    opacity: 1
+
+                });
+
+            }
+
+            confettiRunning = true;
+
+            let startTime =
+                performance.now();
+
+            function animate(now) {
+
+                if (!confettiRunning)
+                    return;
+
+                const elapsed =
+                    now - startTime;
+
+                ctx.clearRect(
+
+                    0,
+                    0,
+                    window.innerWidth,
+                    window.innerHeight
+
+                );
+
+                confettiParticles.forEach(
+                    p => {
+
+                        p.y +=
+                            p.speed;
+
+                        p.x +=
+                            p.wind +
+                            Math.sin(
+                                p.wobble
+                            ) * .35;
+
+                        p.rotation +=
+                            p.rotationSpeed;
+
+                        p.wobble +=
+                            p.wobbleSpeed;
+
+                        if (elapsed > 4000) {
+
+                            p.opacity =
+                                Math.max(
+
+                                    0,
+
+                                    1 -
+                                    (elapsed - 4000) / 1800
+
+                                );
+
+                        }
+
+                        ctx.save();
+
+                        ctx.globalAlpha =
+                            p.opacity;
+
+                        ctx.translate(
+                            p.x,
+                            p.y
+                        );
+
+                        ctx.rotate(
+                            p.rotation
+                        );
+
+                        ctx.fillStyle =
+                            p.color;
+
+        if (p.shape === "rect") {
+        ctx.fillRect(-p.size / 2,-p.size / 2,p.size,p.size * 1.8);}
+        else {tx.beginPath();ctx.arc(0,0,p.size * .55,0, Math.PI * 2);
+        ctx.fill();}ctx.restore();});
+        if (elapsed < 5800){
+        confettiAnimation =requestAnimationFrame(animate);
+        }else {stopConfetti();}}confettiAnimation =requestAnimationFrame(animate);}
+        function stopConfetti() {confettiRunning = false;
+        if (confettiAnimation) {
+        cancelAnimationFrame(confettiAnimation);}
+        const canvas =document.getElementById("confettiCanvas");
+        const ctx =canvas.getContext("2d");
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        canvas.style.display ="none";confettiParticles = [];}
+        window.addEventListener("resize",() => {
+        if (!confettiRunning)return;
+        const canvas =document.getElementById("confettiCanvas");
+        const dpr =Math.min(window.devicePixelRatio || 1,2);
+        canvas.width =window.innerWidth * dpr;
+        canvas.height =window.innerHeight * dpr;
+        canvas.style.width =window.innerWidth + "px";
+        canvas.style.height =window.innerHeight + "px";
+        const ctx =anvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);});
+        function restartSimulator() {
+        stopConfetti();
+        navigateTo("homePage","Restarting Simulator...","Preparing CPU process management...");}
+        document.getElementById("startButton").addEventListener("click",startSimulator);
+        function startSimulator() {
+        const start =document.getElementById("startScreen");
+        const splash =document.getElementById("splashScreen");
+        const main =document.getElementById("mainContainer");
+        const progress =document.getElementById("loadingProgress");
+        const percent =document.getElementById("loadingPercent");
+        const text = document.getElementById("loadingText");
+        start.style.transition ="opacity .6s ease, transform .6s ease";
+        start.style.opacity ="0";
+        start.style.transform = "scale(1.05)";
+        setTimeout(() => {
+        start.style.display ="none";
+        splash.style.display ="flex";
+        let value = 0;
+        const messages = ["Waking up the CPU...","Checking process queue...","Loading scheduling algorithms...","Preparing FCFS, SJF, Priority...","Initializing Round Robin...","Optimizing process manager...","CPU is ready!"];
+        const interval = setInterval(() => {value++;
+        progress.style.width =value + "%";
+        percent.textContent =value + "%";
+        const messageIndex =Math.min(Math.floor(value / 15),
+        messages.length - 1);
+        text.textContent =messages[messageIndex];
+        if (value >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+        splash.style.transition ="opacity .8s ease";
+        splash.style.opacity ="0";
+        setTimeout(() => {
+        splash.style.display ="none";
+        splash.style.opacity ="1";
+        main.classList.remove("hidden");
+        showPageInstant("homePage");}, 800); }, 450);}}, 35);}, 550); }
+        createFCFSInputs();
+        createSJFInputs();
+        createPriorityInputs();
+        createRRInputs();
+        (function () {
+            const body = document.body;
+            const sky = document.createElement("div");
+            sky.className = "sky-effects";
+            sky.innerHTML = `
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+        <div class="bird bird1"></div>
+        <div class="bird bird2"></div>
+        <div class="bird bird3"></div>
+    `;
+        body.prepend(sky);
+            for (let i = 0; i < 90; i++) {
+            const star = document.createElement("div"); star.className = "star";
+            star.style.left = Math.random() * 100 + "%";
+            star.style.top =Math.random() * 100 + "%";
+            const size = Math.random() * 3 + 1;
+            star.style.width =size + "px";
+            star.style.height = size + "px";
+            star.style.animationDuration =(Math.random() * 3 + 2) + "s";
+            star.style.animationDelay =Math.random() * 4 + "s";
+            sky.appendChild(star);}
+            for (let i = 0; i < 9; i++) {
+            const asteroid =document.createElement("div");
+            asteroid.className ="asteroid";
+            asteroid.style.left =Math.random() * 100 + "%";
+            asteroid.style.top =Math.random() * 100 + "%";
+            const size = Math.random() * 7 + 4;
+            asteroid.style.width = size + "px";
+            asteroid.style.height = size + "px";
+            asteroid.style.animationDuration = (Math.random() * 18 + 15) + "s";
+            asteroid.style.animationDelay =Math.random() * 15 + "s";
+            sky.appendChild(asteroid);}
+            const magic = document.createElement("div");
+            magic.id ="magicTransition";
+            body.appendChild(magic);
+            const button = document.createElement("button");
+            button.id ="themeToggle";
+            button.type ="button";
+            button.setAttribute( "aria-label","Toggle dark mode");
+            button.innerHTML ="🌙"; body.appendChild(button);
+            const savedTheme =localStorage.getItem("cpuSimulatorTheme");
+            if (savedTheme === "dark") {
+                body.classList.add("dark-mode"); 
+                button.innerHTML = "☀️";
+            }
+            function createMagicParticles(goingDark) 
+            {
+                const amount = window.innerWidth < 600 ? 28 : 55;
+                const centerX =window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                for (let i = 0; i < amount; i++) {
+                    const particle = document.createElement("div");
+                    particle.className = "magic-particle";
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 120 + Math.random() *Math.max(window.innerWidth,window.innerHeight) * .65;
+                    const startX = centerX + (Math.random() - .5) * 120;
+                    const startY = centerY + (Math.random() - .5) * 120;
+                    const dx = Math.cos(angle) * distance;
+                    const dy = Math.sin(angle) * distance;
+                    particle.style.left = startX + "px";
+                    particle.style.top = startY + "px";
+                    particle.style.setProperty("--dx",dx + "px");
+                    particle.style.setProperty("--dy",dy + "px");
+                    const size = Math.random() * 6 + 3;
+                    particle.style.width = size + "px";
+                    particle.style.height =size + "px";
+                    particle.style.animationDelay = Math.random() * .25 + "s";
+                    if (!goingDark) {
+                    particle.style.background ="radial-gradient(circle,#fff,#8edbff)";}
+                    else {particle.style.background ="radial-gradient(circle,#fff,#b8d8ff)";}
+                    body.appendChild(particle);
+                    setTimeout(() => {particle.remove();
+                    }, 1500);}}
+            button.addEventListener("click",
+                () => {
+                    const goingDark =!body.classList.contains("dark-mode");
+                    button.disabled = true;
+                    magic.classList.remove("active");
+                    void magic.offsetWidth;
+                    magic.classList.add("active");
+                    createMagicParticles(goingDark);
+                    button.style.transform =
+                        goingDark
+                            ? "rotate(180deg) scale(1.18)"
+                            : "rotate(-180deg) scale(1.18)";
+                    setTimeout(() => {
+                        body.classList.toggle(
+                            "dark-mode",
+                            goingDark
+                        );
+                        button.innerHTML =goingDark
+                                ? "☀️"
+                                : "🌙";
+                        localStorage.setItem("cpuSimulatorTheme", goingDark? "dark":"light");}, 500);
+                    setTimeout(() => {
+                        button.style.transform = "";}, 900);
+                    setTimeout(() => {
+                        magic.classList.remove("active");
+                        button.disabled = false;}, 1400);});
+             })();
+    </script>
+</body>
+</html>
+</html>
